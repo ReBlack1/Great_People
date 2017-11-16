@@ -1,19 +1,14 @@
 ﻿# -*- coding: utf-8 -*-
-
 import Parser_Module
-import requests
-from lxml import etree
 
-def _Search_Ach_Palate_Boss(url):
-    ACH_BOSS = etree.XPath("//div[@class = 'workes ruk'][1]/div[@class = 'desc']/a/@href")
-    req = requests.get(url)
-    html = etree.HTML(req.text)
-    if str(req) == "<Response [200]>":
-        return "http://www.ach.gov.ru" + ACH_BOSS(html)[0]
-    else:
-        return req
+xpath_search_boss = "//div[@class = 'workes ruk'][1]/div[@class = 'desc']/a/@href"
+url_search_boss = "http://www.ach.gov.ru/structure/"
+URL_BOSS_AVATAR = "http://www.ach.gov.ru/images/lead1.png"
+URL_BOSS = "http://www.ach.gov.ru" + Parser_Module._parser(url_search_boss, xpath_search_boss)[0]
 
-url_BOSS_AVATAR = "http://www.ach.gov.ru/images/lead1.png"
-url_BOSS = _Search_Ach_Palate_Boss("http://www.ach.gov.ru/structure/")
-print(url_BOSS)
-print(Parser_Module._parser("http://www.ach.gov.ru/structure/", "//div[@class = 'workes ruk'][1]/div[@class = 'desc']/a/@href"))
+xpath_biography = "//div[@class = 'tab_content_imit']/*"
+
+BIORGRAPHY = Parser_Module._takeNextText(URL_BOSS, xpath_biography, "", "p", True)
+
+for i in BIORGRAPHY:
+    print(i)

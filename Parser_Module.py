@@ -11,3 +11,15 @@ def _parser(url, xpath):
         return XPATH(html)
     else:
         return req
+
+def _takeNextText(url, xpath, KEY_WORD, NAME_TAG, Flag = False):
+    XPATH_A = _parser(url, xpath)
+    RET_LIST = []
+    for l in XPATH_A:
+         if Flag == True and l.tag != NAME_TAG:
+            Flag = False
+         if l.text == KEY_WORD:
+             Flag = True
+         if Flag == True and l.tag == NAME_TAG:
+             RET_LIST.append(l.text)
+    return(RET_LIST)
