@@ -36,7 +36,7 @@ def _GosDumPersonParser(ID):
 
 
 def _GosDumSpeechParser(ID):
-    url_speech = 'http://cir.duma.gov.ru/duma/servlet/is4.wwwmain?FormName=ShowResult&QueryID=' +str('ID')+ '&Page=1&ShowMax=200'
+    url_speech = 'http://cir.duma.gov.ru/duma/servlet/is4.wwwmain?FormName=ShowResult&QueryID=' +str(ID)+ '&Page=1&ShowMax=200'
     req_speech= requests.get(url_speech)
     html_speech = etree(req_speech.text)
     if str(req_speech) == "<Response [200]>":
