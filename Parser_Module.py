@@ -21,5 +21,5 @@ def _takeNextText(url, xpath, KEY_WORD, NAME_TAG, Flag = False):
          if l.text == KEY_WORD:
              Flag = True
          if Flag == True and l.tag == NAME_TAG:
-             RET_LIST.append(l.text)
+             RET_LIST.append(l)
     return(RET_LIST)
