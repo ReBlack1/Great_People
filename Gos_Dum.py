@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import Parser_Module
+import requests
+from lxml import etree
 
 #ВОзвращает список списков где в 0-ФИО депутатов, 1-Их ID
 def _GosDumSearch():
@@ -14,14 +16,16 @@ def _GosDumSearch():
                 RET_LIST[0].append(r.text)
                 RET_LIST[1].append(str(r.attrib)[-10:-3])
     return(RET_LIST)
-#_GosDumSearch()
+##_GosDumSearch()
 
+# Возвращает ссылку на фото депутата
 def _GosDumPersonImg(ID):
     url = 'http://www.duma.gov.ru/structure/deputies/'+ str(ID) + "/"
     xpath_photo = ".//body/div[@id = 'wrap']/div [@id = 'main']/div [@id = 'left-col']/div [@class = 'deputat-info']//img/@src"
     PHOTO = "http://www.duma.gov.ru" + Parser_Module._parser(url, xpath_photo)[0]
     return(PHOTO)
 
+# Возвращает массив с образовательными учереждениями, которые окончил депутат
 def _GosDumPersonEducation(ID):
     url = 'http://www.duma.gov.ru/structure/deputies/'+ str(ID) + "/"
     xpath_education = ".//body/div[@id = 'wrap']/div [@id = 'main']/div [@id = 'left-col']/div [@class = 'deputat-info']/div [@class = 'deputat-info-right']/*"
@@ -31,6 +35,21 @@ def _GosDumPersonEducation(ID):
         RET_LIST.append(i.text)
     return RET_LIST
 
+def _GosDumPersonSpeechFirstPage(ID):
+    url = 'http://www.duma.gov.ru/structure/deputies/'+ str(ID) + "/"
+    xpath_speech = ".//div[@class = 'deputat-info-left']/ul[@class='deputat-info-menu']/li[@class='di-perfom']/a[@class='external']/@href"
+    print(Parser_Module._parser(url, xpath_speech)[0])
+
+def _GosDumPersonSpeechNextPage(url):
+    xpath_next_page = ".//div[@class='page-nave']//a[@class='page-nave-next']/@href"
+    print(Parser_Module._parser(url, xpath_next_page))
+
+def _GosDumPersonSpeech(KEY_DEPUTY):
+    API_KEY = "c3fee5876f89bd7d9cf05d87a0b21f2de7fa42ea"
+    API_KEY_APP = "appf038c62e1646f599a6700e2df004d7ae4edcb6dd"
+    url = "http://api.duma.gov.ru/api/" + API_KEY + "/transcriptDeputy/" + str(KEY_DEPUTY) + ".xml?limit=20&page=451" + "&app_token=" + API_KEY_APP
+    xpath_count = ".//body"
+    print(Parser_Module._parser(url, xpath_count)[0].getchildren()[0].getchildren()[3].text)
 ##    EDUCATION_MORE = etree.XPath(".//body/div[@id = 'wrap']/div [@id = 'main']/div [@id = 'left-col']/div [@class = 'deputat-info']/div [@class = 'deputat-info-right']/ul[@class = 'list-ul1']/*")
 ##    EDUCATION_ACHIEVEMENT =  etree.XPath(".//body/div[@id = 'wrap']/div [@id = 'main']/div [@id = 'left-col']/div [@class = 'deputat-info']/div [@class = 'deputat-info']/div [@class = 'deputat-info-right']/ul[@class = 'list-ul1']/*")
 ##    BIOGRAHY = etree.XPath(".//body/div[@id = 'wrap']/div [@id = 'main']/div [@id = 'left-col']/div [@class = 'deputat-info']/div [@class = 'deputat-info-right']/*")
@@ -60,12 +79,8 @@ def _GosDumPersonEducation(ID):
         #     if FlagBiograhy == True and l.tag == 'p':
         #          print(l.text)
 
-print(_GosDumPersonEducation(1756721))
-##def _GosDumSpeechParser(ID):
-    ##url_speech = 'http://cir.duma.gov.ru/duma/servlet/is4.wwwmain?FormName=ShowResult&QueryID=' +str('ID')+ '&Page=1&ShowMax=200'
-    ##req_speech= requests.get(url_speech)
-    ##html_speech = etree(req_speech.text)
-    ##if str(req_speech) == "<Response [200]>":
+print(_GosDumPersonSpeech(99100142))
+
 
 
 
