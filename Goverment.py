@@ -18,5 +18,21 @@ def _GovermentBossPersonURL():
     xpath = ".//li[@class='person person__large']/a[@class='person_slide']/@href"
     return "http://government.ru" + str(Parser_Module._parser(url, xpath)[0])
 
+#Возращает список с датой рождения
+def _GovermentPersonAge(URL_PERSON):
+    url = URL_PERSON + "biography/"
+    xpath = ".//div[@class='reader']//div[@class='reader_article ']/div[@class='reader_article_body']/p"
+    return Parser_Module._parser(url, xpath)[1].text.split()[1:4]
 
-print(_GovermentExBossPersonURL())
+#Возвращает биографию депутата в массиве
+def _GovermentPersonBiography(URL_PERSON):
+    RET_LIST = []
+    url = URL_PERSON + "biography/"
+    xpath = ".//div[@class='reader']//div[@class='reader_article ']/div[@class='reader_article_body']/p"
+    for i in Parser_Module._parser(url, xpath)[2:]:
+        RET_LIST.append(i.text)
+    return RET_LIST
+
+
+for i in _GovermentPersonBiography("http://government.ru/gov/persons/183/"):
+    print(i)
