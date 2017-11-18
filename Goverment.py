@@ -33,6 +33,11 @@ def _GovermentPersonBiography(URL_PERSON):
         RET_LIST.append(i.text)
     return RET_LIST
 
+def _GovermentPersonFIO(URL_PERSON):
+    xpath = './/p[@class="vcard_name"]'
+    return Parser_Module._parser(URL_PERSON, xpath)[0].text
 
-for i in _GovermentPersonBiography("http://government.ru/gov/persons/183/"):
-    print(i)
+def _GovermentPersonImage(URL_PERSON):
+    xpath = './/div[@class="vcard_photo"]/img/@src'
+    return Parser_Module._parser(URL_PERSON, xpath)[0]
+

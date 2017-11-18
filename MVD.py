@@ -28,7 +28,8 @@ def _MVDPersonAge(ID):
     xpath = './/div[@class="ln-content-holder"]/div[@class="news_block block_size14"]/p'
     BLOCK_AGE = Parser_Module._parser(url,xpath)[0].text
     AGE = BLOCK_AGE.split("года")[0]
-    AGE = AGE.split("г")[0]
+    AGE = AGE.split("г.")[0]
+    AGE = AGE.split("году")[0]
     AGE = AGE.split()[-1]
     return AGE
 
@@ -37,3 +38,8 @@ def _MVDPersonImage(ID):
     url = "https://мвд.рф/mvd/Rukovodstvo/item/" + str(ID) + "/"
     xpath = './/div [@class="sd-image"]/img/@src'
     return Parser_Module._parser(url, xpath)[0]
+
+def _MVDPersonFIO(ID):
+    url = "https://мвд.рф/mvd/Rukovodstvo/item/" + str(ID) + "/"
+    xpath = './/div[@class="ln-content-holder"]/h1'
+    return Parser_Module._parser(url, xpath)[0].text
