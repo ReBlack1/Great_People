@@ -5,20 +5,18 @@ from lxml import etree
 API_KEY = "c3fee5876f89bd7d9cf05d87a0b21f2de7fa42ea"
 API_KEY_APP = "appf038c62e1646f599a6700e2df004d7ae4edcb6dd"
 
+#Просит первую букву для фамилий списка депутатов
 #ВОзвращает список списков где в 0-ФИО депутатов, 1-Их ID
-def _GosDumSearch():
-    ALFABET = ["А", "Б", "В", "Г", "Д"]
+def _GosDumSearch(LETTER):
     xpath = ".//a"
     RET_LIST = [[],[]]
-    for i in ALFABET:
-        url = "http://www.duma.gov.ru/about/personnel/property/deputies/?letter=" + i
-        DEPUTY_LIST = Parser_Module._parser(url, xpath)
-        for r in DEPUTY_LIST:
-            if str(r.attrib)[:-10] == "{'href': '/structure/deputies/" and r.text != "Председатель ГД":
-                RET_LIST[0].append(r.text)
-                RET_LIST[1].append(str(r.attrib)[-10:-3])
+    url = "http://www.duma.gov.ru/about/personnel/property/deputies/?letter=" + LETTER
+    DEPUTY_LIST = Parser_Module._parser(url, xpath)
+    for r in DEPUTY_LIST:
+        if str(r.attrib)[:-10] == "{'href': '/structure/deputies/" and r.text != "Председатель ГД":
+            RET_LIST[0].append(r.text)
+            RET_LIST[1].append(str(r.attrib)[-10:-3])
     return(RET_LIST)
-##_GosDumSearch()
 
 # Возвращает ссылку на фото депутата
 def _GosDumPersonImg(ID):
@@ -36,7 +34,7 @@ def _GosDumPersonEducation(ID):
     for i in LIST[0].getchildren():
         RET_LIST.append(i.text)
     return RET_LIST
-
+#Возвращает список с темами выступлений
 def _GosDumPersonSpeechName(KEY_DEPUTY):
     url = "http://api.duma.gov.ru/api/" + API_KEY + "/transcriptDeputy/" + str(KEY_DEPUTY) + ".xml?limit=20" + "&app_token=" + API_KEY_APP
     xpath_count = ".//body/result/totalcount"
@@ -49,6 +47,7 @@ def _GosDumPersonSpeechName(KEY_DEPUTY):
             RET_LIST.append(i.text)
     return RET_LIST
 
+#Возвращает str с ключом депутата гос думы
 def _GosDumPersonGetKey(FIO):
     FIRST_LETTER = FIO.split()[0]
     url = "http://api.duma.gov.ru/api/" + API_KEY + "/deputies.xml?begin=" + str(FIO) + "&current=1" + "&app_token=" + API_KEY_APP
