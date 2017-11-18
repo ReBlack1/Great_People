@@ -5,7 +5,6 @@ from lxml import etree
 API_KEY = "c3fee5876f89bd7d9cf05d87a0b21f2de7fa42ea"
 API_KEY_APP = "appf038c62e1646f599a6700e2df004d7ae4edcb6dd"
 
-
 #ВОзвращает список списков где в 0-ФИО депутатов, 1-Их ID
 def _GosDumSearch():
     ALFABET = ["А", "Б", "В", "Г", "Д"]
@@ -51,11 +50,21 @@ def _GosDumPersonSpeechName(KEY_DEPUTY):
     return RET_LIST
 
 def _GosDumPersonGetKey(FIO):
-
     FIRST_LETTER = FIO.split()[0]
-    url = "http://api.duma.gov.ru/api/" + API_KEY + "/deputies.xml?begin=" + str(FIRST_LETTER) + "&current=1" + "&app_token=" + API_KEY_APP
+    url = "http://api.duma.gov.ru/api/" + API_KEY + "/deputies.xml?begin=" + str(FIO) + "&current=1" + "&app_token=" + API_KEY_APP
     xpath_key = ".//body/result/deputy/id"
-    return Parser_Module._parser(url, xpath_key)[0].text
+    print(url)
+    RET_LIST = Parser_Module._parser(url, xpath_key)
+    if len(RET_LIST) > 0:
+        return RET_LIST[0].text
+    else:
+        return "Not found"
+
+#Возвращает массив с тремя элементами 0- день 1- месяц буквами 2- год рождения
+def _GosDumPersonAge(ID):
+    url = 'http://www.duma.gov.ru/structure/deputies/'+ str(ID) + "/"
+    xpath_age = ('.//p[@class="deputat-info-date"]')
+    return Parser_Module._parser(url, xpath_age)[0].text.split()[2:-1]
 
 ##    EDUCATION_MORE = etree.XPath(".//body/div[@id = 'wrap']/div [@id = 'main']/div [@id = 'left-col']/div [@class = 'deputat-info']/div [@class = 'deputat-info-right']/ul[@class = 'list-ul1']/*")
 ##    EDUCATION_ACHIEVEMENT =  etree.XPath(".//body/div[@id = 'wrap']/div [@id = 'main']/div [@id = 'left-col']/div [@class = 'deputat-info']/div [@class = 'deputat-info']/div [@class = 'deputat-info-right']/ul[@class = 'list-ul1']/*")
@@ -86,10 +95,9 @@ def _GosDumPersonGetKey(FIO):
         #     if FlagBiograhy == True and l.tag == 'p':
         #          print(l.text)
 
-Name = _GosDumPersonGetKey("Володин Вячеслав Викторович")
-SPEECH = _GosDumPersonSpeechName(99100829)
-print(Name)
-print(SPEECH)
+print(_GosDumPersonAge(1756914))
+
+
 
 
 
