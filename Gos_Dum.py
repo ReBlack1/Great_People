@@ -53,7 +53,6 @@ def _GosDumPersonGetKey(FIO):
     FIRST_LETTER = FIO.split()[0]
     url = "http://api.duma.gov.ru/api/" + API_KEY + "/deputies.xml?begin=" + str(FIO) + "&current=1" + "&app_token=" + API_KEY_APP
     xpath_key = ".//body/result/deputy/id"
-    print(url)
     RET_LIST = Parser_Module._parser(url, xpath_key)
     if len(RET_LIST) > 0:
         return RET_LIST[0].text
@@ -95,7 +94,6 @@ def _GosDumPersonAge(ID):
         #     if FlagBiograhy == True and l.tag == 'p':
         #          print(l.text)
 
-print(_GosDumPersonAge(1756914))
 
 
 
