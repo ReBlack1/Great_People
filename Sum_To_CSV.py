@@ -3,15 +3,22 @@ import csv
 import Gos_Dum
 import Goverment
 import MVD
+import MCHS
 import Parser_Module
 import requests
 from lxml import etree
 
 def _UpgradeAll():
     _makeNewBD()
+    print("I made new BD")
     _UpgradeGosDum()
+    print("I upgrade GD")
     _UpgradeGoverment()
+    print("I upgrade Goverment")
     _UpgradeMVD()
+    print("I upgrade MVD")
+    _UpgradeMCHS()
+    print("I upgrade MCHS")
 
 def _makeNewBD():
     _csvWriter([["Structure", "Second_Name", "First_Name", "Third_Name", "Birthday", "Birthmonth", "Birthyear", "Photo", "ID/URL", "KEY"]])
@@ -73,3 +80,21 @@ def _UpgradeMVD():
         IMG = MVD._MVDPersonImage(i)
         SUM_LIST.append(["MVD", FIO[0], FIO[1], FIO[2], "None", "None", AGE, IMG, i])
     _csvAppend(SUM_LIST)
+
+def _UpgradeMCHS():
+    URL_LIST = MCHS._MCHSGetPerson()
+    SUM_LIST = []
+    z = ""
+    for i in URL_LIST:
+        FIO = MCHS._MCHSPersonFIO(i).split()
+        try:
+            AGE = MCHS._MCHSPersonAge(i)
+        except:
+            AGE = "not found"
+        try:
+            IMG = MCHS._MCHSPersonImage(i)
+        except:
+            IMG = "not found"
+        SUM_LIST.append(["MCHS", FIO[0], FIO[1], FIO[2], "None", "None", AGE, IMG, i])
+    _csvAppend(SUM_LIST)
+

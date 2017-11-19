@@ -20,27 +20,32 @@ def _MCHSPersonFIO(URL):
 #Вернет str год рождения
 def _MCHSPersonAge(URL):
     xpath = './/article [@class="content clearfix"]//p/text()'
-    for i in range(3):
-        FLAG = False
-        for j in Parser_Module._parser(URL, xpath)[i].replace(',', " ").split():
-            if j == "Родился" or j == "родился" or j == "рождения":
-                FLAG = True
-            if FLAG:
-                try:
-                    int(j)
-                    if int(j) > 1900:
-                        return j
-                except:
-                    pass
+    if len(Parser_Module._parser(URL, xpath)) > 3:
+        for i in range(3):
+            FLAG = False
+            for j in Parser_Module._parser(URL, xpath)[i].replace(',', " ").split():
+                if j == "Родился" or j == "родился" or j == "рождения":
+                    FLAG = True
+                if FLAG:
+                    try:
+                        int(j)
+                        if int(j) > 1900:
+                            return j
+                    except:
+                        pass
+    return "not found"
 
 #Возвращает url картинки
 def _MCHSPersonImage(URL):
     xpath = './/article [@class="content clearfix"]/div/img/@src'
-    return "http://www.mchs.gov.ru" + Parser_Module._parser(URL, xpath)[0]
+    try:
+        return "http://www.mchs.gov.ru" + Parser_Module._parser(URL, xpath)[0]
+    except:
+        return "not found"
 
 #Возвращает список с биографией
 def _MCHSPersonBiography(URL):
     xpath = './/article [@class="content clearfix"]//p/text()'
     return Parser_Module._parser(URL, xpath)
 
-print(_MCHSPersonBiography("http://www.mchs.gov.ru/ministry/management/item/33076798/"))
+print(_MCHSPersonImage("http://www.mchs.gov.ru/ministry/management/item/33195090/"))
