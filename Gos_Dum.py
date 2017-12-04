@@ -31,8 +31,11 @@ def _GosDumPersonEducation(ID):
     xpath_education = ".//body/div[@id = 'wrap']/div [@id = 'main']/div [@id = 'left-col']/div [@class = 'deputat-info']/div [@class = 'deputat-info-right']/*"
     LIST = Parser_Module._takeNextText(url, xpath_education, "Образование", 'ul')
     RET_LIST = []
-    for i in LIST[0].getchildren():
-        RET_LIST.append(i.text)
+    try:
+        for i in LIST[0].getchildren():
+            RET_LIST.append(i.text)
+    except:
+        RET_LIST.append("no found")
     return RET_LIST
 #Возвращает список с темами выступлений
 def _GosDumPersonSpeechName(KEY_DEPUTY):
