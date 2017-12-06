@@ -4,6 +4,9 @@ import requests
 from lxml import etree
 import csv
 import Gos_Dum
+import Goverment
+import MVD
+import MCHS
 
 def _educationAnalys(BIOGRAPHY_LIST):
     RET_LIST = []
@@ -14,11 +17,18 @@ def _educationAnalys(BIOGRAPHY_LIST):
                 RET_LIST.append(i)
     return RET_LIST
 
-def _getBiograhpy(STRUCTURE, URL):
+def _getEducation(STRUCTURE, URL):
     if STRUCTURE == "GD":
         return Gos_Dum._GosDumPersonEducation(URL)
+    if STRUCTURE == "MCHS":
+        return _educationAnalys(MCHS._MCHSPersonBiography(URL))
+    if STRUCTURE == "MVD":
+        return _educationAnalys(MVD._MVDPersonBiography(URL))
+    if STRUCTURE == "Goverment":
+        return "no found"
 
-def _scvReader(Q_LINE):
+
+def _scvReaderQ(Q_LINE):
     RET_LIST = []
     q = 0
     with open("BD.csv", "r", newline='') as csv_file:
@@ -31,6 +41,20 @@ def _scvReader(Q_LINE):
             q += 1
             if q > Q_LINE:
                 return RET_LIST
-for i in range(300):
-    print(_educationAnalys( _getBiograhpy( _scvReader(400)[i][0], _scvReader(400)[i][1])))
-##    print( _getBiograhpy( _scvReader(10)[i][0], _scvReader(10)[i][1]))
+def _scvReader():
+    RET_LIST = []
+    FLAG = True
+    with open("BD.csv", "r", newline='') as csv_file:
+        reader = csv.reader(csv_file)
+        for line in reader:
+            if FLAG:
+                FLAG = False
+                continue
+            RET_LIST.append([line[0],line[8]])
+    return RET_LIST
+
+##A = _scvReader()
+##Bio = []
+##for i in A:
+##    Bio.append(_getEducation(i[0], i[1]))
+##print(Bio)

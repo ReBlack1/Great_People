@@ -9,13 +9,12 @@ API_KEY_APP = "appf038c62e1646f599a6700e2df004d7ae4edcb6dd"
 #ВОзвращает список списков где в 0-ФИО депутатов, 1-Их ID
 def _GosDumSearch(LETTER):
     xpath = ".//a"
-    RET_LIST = [[],[]]
+    RET_LIST = []
     url = "http://www.duma.gov.ru/about/personnel/property/deputies/?letter=" + LETTER
     DEPUTY_LIST = Parser_Module._parser(url, xpath)
     for r in DEPUTY_LIST:
         if str(r.attrib)[:-10] == "{'href': '/structure/deputies/" and r.text != "Председатель ГД":
-            RET_LIST[0].append(r.text)
-            RET_LIST[1].append(str(r.attrib)[-10:-3])
+            RET_LIST.append([r.text, str(r.attrib)[-10:-3]])
     return(RET_LIST)
 
 # Возвращает ссылку на фото депутата
@@ -35,7 +34,7 @@ def _GosDumPersonEducation(ID):
         for i in LIST[0].getchildren():
             RET_LIST.append(i.text)
     except:
-        RET_LIST.append("no found")
+        return ["no found"]
     return RET_LIST
 #Возвращает список с темами выступлений
 def _GosDumPersonSpeechName(KEY_DEPUTY):
@@ -65,7 +64,10 @@ def _GosDumPersonGetKey(FIO):
 def _GosDumPersonAge(ID):
     url = 'http://www.duma.gov.ru/structure/deputies/'+ str(ID) + "/"
     xpath_age = ('.//p[@class="deputat-info-date"]')
-    return Parser_Module._parser(url, xpath_age)[0].text.split()[2:-1]
+    try:
+        return Parser_Module._parser(url, xpath_age)[0].text.split()[2:-1]
+    except:
+        return ["no found","no found","no found"]
 
 ##    EDUCATION_MORE = etree.XPath(".//body/div[@id = 'wrap']/div [@id = 'main']/div [@id = 'left-col']/div [@class = 'deputat-info']/div [@class = 'deputat-info-right']/ul[@class = 'list-ul1']/*")
 ##    EDUCATION_ACHIEVEMENT =  etree.XPath(".//body/div[@id = 'wrap']/div [@id = 'main']/div [@id = 'left-col']/div [@class = 'deputat-info']/div [@class = 'deputat-info']/div [@class = 'deputat-info-right']/ul[@class = 'list-ul1']/*")
