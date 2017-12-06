@@ -41,3 +41,4 @@ def _GovermentPersonImage(URL_PERSON):
     xpath = './/div[@class="vcard_photo"]/img/@src'
     return Parser_Module._parser(URL_PERSON, xpath)[0]
 
+print(_GovermentPersonBiography("http://government.ru/gov/persons/3/"))
